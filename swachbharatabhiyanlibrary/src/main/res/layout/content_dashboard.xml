@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".activity.DashboardActivity"
+    tools:showIn="@layout/activity_dashboard">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="130dp"
+        android:contentDescription="@string/app_name"
+        android:scaleType="fitXY"
+        android:src="@drawable/ic_home_screen_vector" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/user_details_card"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/dim_12_dp"
+        android:layout_marginTop="25dp"
+        android:layout_marginEnd="@dimen/dim_12_dp"
+        app:cardCornerRadius="@dimen/dim_6_dp"
+        app:cardElevation="3dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingStart="@dimen/dim_12_dp"
+            android:paddingTop="@dimen/dim_5_dp"
+            android:paddingEnd="@dimen/dim_12_dp"
+            android:paddingBottom="@dimen/dim_5_dp">
+
+            <ImageView
+                android:id="@+id/user_profile_pic"
+                android:layout_width="@dimen/dim_140_dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginEnd="@dimen/dim_6_dp"
+                android:layout_weight="0.3"
+                android:contentDescription="@string/hyphen"
+                android:padding="0dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_user" />
+
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="0.7"
+                android:paddingBottom="@dimen/dim_6_dp">
+
+                <TextView
+                    android:id="@+id/user_full_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/hyphen"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/dim_25_sp" />
+
+                <TextView
+                    android:id="@+id/user_emp_id_lbl"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/user_full_name"
+                    android:text="@string/emp_id_full"
+                    android:textColor="@color/colorDefault" />
+
+                <TextView
+                    android:id="@+id/user_emp_id"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBaseline="@id/user_emp_id_lbl"
+                    android:layout_marginStart="@dimen/dim_6_dp"
+                    android:layout_toEndOf="@id/user_emp_id_lbl"
+                    android:text="@string/hyphen" />
+
+                <LinearLayout
+                    android:id="@+id/duty_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/user_emp_id_lbl"
+                    android:layout_marginTop="@dimen/dim_10_dp"
+                    android:orientation="horizontal"
+                    android:paddingEnd="@dimen/dim_5_dp">
+
+                    <TextView
+                        android:id="@+id/user_attendance_status"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.6"
+                        android:gravity="center_vertical|start"
+                        android:text="@string/status_off_duty"
+                        android:textColor="@color/cart_count_color" />
+
+                    <Switch
+                        android:id="@+id/user_attendance_toggle"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.3"
+                        android:gravity="end" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/user_vehicle_type"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/duty_layout"
+                    android:gravity="center_vertical|start"
+                    android:textColor="@color/colorDefault" />
+
+            </RelativeLayout>
+
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/menu_grid"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/user_details_card"
+        android:layout_marginTop="@dimen/dim_6_dp" />
+
+</RelativeLayout>
