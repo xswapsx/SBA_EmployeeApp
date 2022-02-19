@@ -2,11 +2,11 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/CloneSBA.iml" filepath="$PROJECT_DIR$/.idea/modules/CloneSBA.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/CloneSBA.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/CloneSBA.app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/retrofitconnectionlibrary/CloneSBA.retrofitconnectionlibrary.iml" filepath="$PROJECT_DIR$/.idea/modules/retrofitconnectionlibrary/CloneSBA.retrofitconnectionlibrary.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/riaylibrary/CloneSBA.riaylibrary.iml" filepath="$PROJECT_DIR$/.idea/modules/riaylibrary/CloneSBA.riaylibrary.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/swachbharatabhiyanlibrary/CloneSBA.swachbharatabhiyanlibrary.iml" filepath="$PROJECT_DIR$/.idea/modules/swachbharatabhiyanlibrary/CloneSBA.swachbharatabhiyanlibrary.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/SBA_Library.iml" filepath="$PROJECT_DIR$/.idea/modules/SBA_Library.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/SBA_Library.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/SBA_Library.app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/retrofitconnectionlibrary/SBA_Library.retrofitconnectionlibrary.iml" filepath="$PROJECT_DIR$/.idea/modules/retrofitconnectionlibrary/SBA_Library.retrofitconnectionlibrary.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/riaylibrary/SBA_Library.riaylibrary.iml" filepath="$PROJECT_DIR$/.idea/modules/riaylibrary/SBA_Library.riaylibrary.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/swachbharatabhiyanlibrary/SBA_Library.swachbharatabhiyanlibrary.iml" filepath="$PROJECT_DIR$/.idea/modules/swachbharatabhiyanlibrary/SBA_Library.swachbharatabhiyanlibrary.iml" />
     </modules>
   </component>
 </project>
