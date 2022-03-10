@@ -75,7 +75,8 @@ public class ChooseActionPopUp extends Dialog {
         Bitmap myBitmap = BitmapFactory.decodeFile(mPath);
         ivQR_image.setImageBitmap(myBitmap);
 
-        Bitmap bmp = addTextToImage(myBitmap, "Swapnil Lanjewar", 200, 200, Color.GREEN, 80, 24, false);
+        Bitmap bmp = writeOnImage("03-09-2022 18:22:06\nHPSBA3000");
+        ivQR_image.setImageBitmap(bmp);
         File f = new File(mPath);
         try {
             FileOutputStream fos = new FileOutputStream(f);
@@ -132,6 +133,21 @@ public class ChooseActionPopUp extends Dialog {
         canvas.drawText(textToAddOnImage, x, y, paint);
 
         return result;
+    }
+
+    public Bitmap writeOnImage(String text) {
+
+        Bitmap bm = BitmapFactory.decodeFile(mPath);
+        Bitmap mutableBitmap = bm.copy(Bitmap.Config.ARGB_8888, true);
+        Paint paint = new Paint();
+        paint.setStyle(Paint.Style.FILL);
+        paint.setColor(Color.BLACK);
+        paint.setTextSize(20);
+
+        Canvas canvas = new Canvas(mutableBitmap);
+        canvas.drawText(text, 0, mutableBitmap.getHeight() / 2, paint);
+
+        return mutableBitmap;
     }
 
     private void dismissPopup() {
