@@ -949,11 +949,8 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
         attendanceStatus.setTextColor(this.getResources().getColor(R.color.colorOFFDutyRed));
 
         vehicleStatus.setText("");
-
-        stopServiceIfRunning();
-
         markAttendance.setChecked(false);
-
+        stopServiceIfRunning();
         attendancePojo = null;
         AUtils.removeInPunchDate();
         AUtils.setIsOnduty(false);
@@ -961,7 +958,7 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
 
     private void stopServiceIfRunning() {
         boolean isservicerunning = AUtils.isMyServiceRunning(AUtils.mainApplicationConstant, LocationService.class);
-
+        //swap service
         if (isservicerunning)
             ((MyApplication) AUtils.mainApplicationConstant).stopLocationTracking();
     }
