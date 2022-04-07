@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">SBA Demo App</string>
-    <string name="app_id_title">SBA Demo App</string>
+    <string name="app_name">"कर्मचारी अँप "</string>
+    <string name="app_id_title">"कर्मचारी अँप "</string>
 </resources>

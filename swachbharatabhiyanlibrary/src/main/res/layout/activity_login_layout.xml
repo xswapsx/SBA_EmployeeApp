@@ -50,18 +50,18 @@
                     android:text="@string/login_title"
                     android:textColor="@color/colorPrimary" />
 
-                <com.google.android.material.textfield.TextInputLayout
+                <!--<com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
-                    <!--<EditText
+                    &lt;!&ndash;<EditText
                         android:id="@+id/et_emp_type"
                         style="@style/MyEditTextStyleLight"
                         android:clickable="true"
                         android:drawableEnd="@drawable/ic_arrow_down"
                         android:focusable="false"
-                        android:inputType="textCapWords" />-->
-                    <!--android:textColor="#ABABAB"-->
+                        android:inputType="textCapWords" />&ndash;&gt;
+                    &lt;!&ndash;android:textColor="#ABABAB"&ndash;&gt;
 
                     <AutoCompleteTextView
                         android:id="@+id/et_emp_type"
@@ -72,7 +72,7 @@
                         android:focusable="false"
                         android:hint="@string/select_employee_type"
                         android:textSize="@dimen/dim_14_sp" />
-                </com.google.android.material.textfield.TextInputLayout>
+                </com.google.android.material.textfield.TextInputLayout>-->
 
 
                 <com.google.android.material.textfield.TextInputLayout

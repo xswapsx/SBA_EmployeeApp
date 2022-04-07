@@ -1,3 +1,5 @@
 <resources>
-    <string name="app_name">SBA Demo App</string>
+    <string name="app_name">Employee App</string>
+    <string name="app_label" translatable="false">"कर्मचारी अँप "</string>
+    <string name="app_id_title">Employee App</string>
 </resources>

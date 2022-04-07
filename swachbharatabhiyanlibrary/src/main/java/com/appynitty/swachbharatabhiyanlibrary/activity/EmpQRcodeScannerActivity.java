@@ -529,12 +529,14 @@ public class EmpQRcodeScannerActivity extends AppCompatActivity implements ZBarS
     }
 
     private void takePhotoImageViewOnClick() {
-
+//        hideQR();
+        setContentView(R.layout.layout_blank);
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         startActivityForResult(intent, REQUEST_CAMERA);
     }
 
     public void handleResult(Result result) {
+//        scannerView.stopCameraPreview();
         Log.e(TAG, "handleResult: " + result.getContents());
         mHouse_id = result.getContents();
         takePhotoImageViewOnClick();
@@ -570,6 +572,7 @@ public class EmpQRcodeScannerActivity extends AppCompatActivity implements ZBarS
 
         if (validSubmitId(id.toLowerCase())) {
             chooseActionPopUp.setData(id, mImagePath);
+            chooseActionPopUp.setCanceledOnTouchOutside(false);
             chooseActionPopUp.show();
 
 
@@ -594,7 +597,7 @@ public class EmpQRcodeScannerActivity extends AppCompatActivity implements ZBarS
 
             qrLocationPojo.setGcType(getGCType(id));
             qrLocationPojo.setDate(AUtils.getServerDateTime());
-            qrLocationPojo.setQRCodeImage(encodedImage);
+            qrLocationPojo.setQRCodeImage("data:image/jpeg;base64," + encodedImage);
             startSubmitQRAsyncTask(qrLocationPojo);
         } catch (Exception e) {
             e.printStackTrace();
@@ -691,7 +694,9 @@ public class EmpQRcodeScannerActivity extends AppCompatActivity implements ZBarS
                 contentValues.put(MediaStore.MediaColumns.RELATIVE_PATH, "DCIM/" + "Gram Panchayat");
                 Uri imageUri = resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
                 fos = resolver.openOutputStream(imageUri);
-                thumbnail.compress(Bitmap.CompressFormat.PNG, 100, fos);
+
+                Log.e(TAG, "onCaptureImageResult:- width:- " + thumbnail.getWidth() + ", height:- " + thumbnail.getHeight());
+//                thumbnail.compress(Bitmap.CompressFormat.PNG, 100, fos);
                 destination = new File(String.valueOf(contentValues), System.currentTimeMillis() + ".jpg");
 
             } else {
@@ -727,8 +732,10 @@ public class EmpQRcodeScannerActivity extends AppCompatActivity implements ZBarS
         showActionPopUp(mHouse_id);
 
         Bitmap bm = BitmapFactory.decodeFile(finalPath);
+        Bitmap newBitmap = AUtils.writeOnImage(AUtils.getDateAndTime(), mHouse_id, mImagePath);
+
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bm.compress(Bitmap.CompressFormat.JPEG, 100, baos); // bm is the bitmap object
+        newBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos); // bm is the bitmap object
         byte[] byteArrayImage = baos.toByteArray();
 
         encodedImage = Base64.encodeToString(byteArrayImage, Base64.DEFAULT);

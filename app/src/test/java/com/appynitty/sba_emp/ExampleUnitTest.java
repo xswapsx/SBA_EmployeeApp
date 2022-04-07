@@ -1,4 +1,4 @@
-package com.appynitty.swachbharatabhiyan;
+package com.appynitty.sba_emp;
 
 import org.junit.Test;
 

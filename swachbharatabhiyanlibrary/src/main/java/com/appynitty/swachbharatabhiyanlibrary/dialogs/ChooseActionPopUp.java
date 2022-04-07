@@ -5,22 +5,14 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
 
 import com.appynitty.swachbharatabhiyanlibrary.R;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
+import com.appynitty.swachbharatabhiyanlibrary.utils.AUtils;
 
 public class ChooseActionPopUp extends Dialog {
 
@@ -45,7 +37,6 @@ public class ChooseActionPopUp extends Dialog {
     public void setData(String mId, String mPath) {
         this.mId = mId;
         this.mPath = mPath;
-        Log.e(TAG, "setData: id:- " + this.mId + ", Path:- " + this.mPath);
     }
 
     @Override
@@ -72,20 +63,9 @@ public class ChooseActionPopUp extends Dialog {
     }
 
     private void initData() {
-        Bitmap myBitmap = BitmapFactory.decodeFile(mPath);
-        ivQR_image.setImageBitmap(myBitmap);
 
-        Bitmap bmp = writeOnImage("03-09-2022 18:22:06\nHPSBA3000");
+        Bitmap bmp = AUtils.writeOnImage(AUtils.getDateAndTime(), mId, mPath);
         ivQR_image.setImageBitmap(bmp);
-        File f = new File(mPath);
-        try {
-            FileOutputStream fos = new FileOutputStream(f);
-            bmp.compress(Bitmap.CompressFormat.PNG, 100, fos);
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-
 
     }
 
@@ -114,40 +94,6 @@ public class ChooseActionPopUp extends Dialog {
             }
         });
 
-    }
-
-    public Bitmap addTextToImage(Bitmap src, String textToAddOnImage, int x, int y, int color, int alpha, int size, boolean underline) {
-        int w = src.getWidth();
-        int h = src.getHeight();
-        Bitmap result = Bitmap.createBitmap(w, h, src.getConfig());
-
-        Canvas canvas = new Canvas(result);
-        canvas.drawBitmap(src, 0, 0, null);
-
-        Paint paint = new Paint();
-        paint.setColor(color);
-        paint.setAlpha(alpha);
-        paint.setTextSize(size);
-        paint.setAntiAlias(true);
-        paint.setUnderlineText(underline);
-        canvas.drawText(textToAddOnImage, x, y, paint);
-
-        return result;
-    }
-
-    public Bitmap writeOnImage(String text) {
-
-        Bitmap bm = BitmapFactory.decodeFile(mPath);
-        Bitmap mutableBitmap = bm.copy(Bitmap.Config.ARGB_8888, true);
-        Paint paint = new Paint();
-        paint.setStyle(Paint.Style.FILL);
-        paint.setColor(Color.BLACK);
-        paint.setTextSize(20);
-
-        Canvas canvas = new Canvas(mutableBitmap);
-        canvas.drawText(text, 0, mutableBitmap.getHeight() / 2, paint);
-
-        return mutableBitmap;
     }
 
     private void dismissPopup() {

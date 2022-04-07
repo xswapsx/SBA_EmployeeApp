@@ -1,4 +1,4 @@
-package com.appynitty.swachbharatabhiyan;
+package com.appynitty.sba_emp;
 
 import android.content.Context;
 
@@ -22,6 +22,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("com.appynitty.swachbharatabhiyan", appContext.getPackageName());
+        assertEquals("com.appynitty.sba_emp", appContext.getPackageName());
     }
 }

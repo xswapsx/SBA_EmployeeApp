@@ -1,4 +1,4 @@
-package com.appynitty.swachbharatabhiyan;
+package com.appynitty.sba_emp;
 
 import android.content.Context;
 import android.content.Intent;
@@ -15,6 +15,8 @@ import com.pixplicity.easyprefs.library.Prefs;
 import com.riaylibrary.utils.LocaleHelper;
 
 import java.util.ArrayList;
+
+import sba_emp.R;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -34,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-        Prefs.putString(AUtils.APP_ID, "1");
+        Prefs.putString(AUtils.APP_ID, "3094");
         //for nagpur APP_ID="3068", Deoli-"1"
 //           Prefs.putString(AUtils.APP_ID, "3041");
 //        Prefs.putString(AUtils.APP_ID, "1003");

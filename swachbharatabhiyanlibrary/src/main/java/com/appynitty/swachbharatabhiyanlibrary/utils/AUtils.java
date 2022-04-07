@@ -1,12 +1,17 @@
 package com.appynitty.swachbharatabhiyanlibrary.utils;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.IntentSender;
 import android.content.res.Resources;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.ImageDecoder;
+import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.MediaStore;
@@ -27,6 +32,14 @@ import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.SyncServerAda
 import com.appynitty.swachbharatabhiyanlibrary.entity.LastLocationEntity;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.LanguagePojo;
 import com.appynitty.swachbharatabhiyanlibrary.repository.LastLocationRepository;
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.common.api.ResolvableApiException;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResponse;
+import com.google.android.gms.location.LocationSettingsStatusCodes;
+import com.google.android.gms.tasks.Task;
 import com.pixplicity.easyprefs.library.Prefs;
 import com.riaylibrary.utils.CommonUtils;
 import com.valdesekamdem.library.mdtoast.MDToast;
@@ -49,12 +62,12 @@ public class AUtils extends CommonUtils {
 //    public static final String SERVER_URL = "http://192.168.200.4:6077/";
 //    public static final String SERVER_URL = "http://192.168.200.3:6560/";
 
-    //  Advanced Ghanta Gadi Live URL
-//    public static final String SERVER_URL = "http://202.65.157.253:6560";
+    //  Advanced Ghanta Gadi Nagpur Live URL
+    public static final String SERVER_URL = "http://202.65.157.253:6561";
 
     //    Staging URL
 //    public static final String SERVER_URL = "http://115.115.153.117:4044/";
-    public static final String SERVER_URL = "http://202.65.157.254:6560";
+//    public static final String SERVER_URL = "http://202.65.157.254:6560";
 
     //Relese URL
 //    public static final String SERVER_URL = "https://ghantagadi.in:444/";
@@ -615,9 +628,9 @@ public class AUtils extends CommonUtils {
         switch (userType) {
             case AUtils.USER_TYPE.USER_TYPE_WASTE_MANAGER:
                 return WasteDashboardActivity.class;
-            case AUtils.USER_TYPE.USER_TYPE_EMP_SCANNIFY:
+            case AUtils.USER_TYPE.USER_TYPE_EMP_SCANNIFY:       // for house_scanify user its 1
                 return EmpDashboardActivity.class;
-            case AUtils.USER_TYPE.USER_TYPE_GHANTA_GADI:
+            case AUtils.USER_TYPE.USER_TYPE_GHANTA_GADI:        // for ghanta_gadi user its 0
             default:
                 return DashboardActivity.class;
         }
@@ -724,6 +737,93 @@ public class AUtils extends CommonUtils {
         Log.d(TAG, "getEncodedImage: " + encoded);
         return encoded;
 
+    }
+
+    public static Bitmap writeOnImage(String mDate, String mId, String mPath) {
+
+        Bitmap bm = BitmapFactory.decodeFile(mPath);
+        Bitmap mutableBitmap = bm.copy(Bitmap.Config.ARGB_8888, true);
+        Paint paint = new Paint();
+        paint.setStyle(Paint.Style.FILL_AND_STROKE);
+        paint.setColor(Color.CYAN);
+        paint.setTextAlign(Paint.Align.CENTER);
+        paint.setTextSize(10);
+
+
+        Canvas canvas = new Canvas(mutableBitmap);
+
+        canvas.drawText(mDate, 100, 245, paint);
+        canvas.drawText("ID: " + mId, 100, 225, paint);
+//        canvas.drawCircle(50, 50, 10, paint);
+
+        return mutableBitmap;
+    }
+
+
+
+    public static String getDateAndTime() {
+        Date c = Calendar.getInstance().getTime();
+        System.out.println("Current time => " + c);
+
+        SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy hh:mm", Locale.getDefault());
+        String formattedDate = df.format(c);
+
+        return formattedDate;
+    }
+
+    /** Created by Swapnil */
+    public static void gpsStatusCheck(Context ctx) {
+
+        LocationRequest mLocationRequest = new LocationRequest();
+        mLocationRequest.setInterval(10);
+        mLocationRequest.setSmallestDisplacement(10);
+        mLocationRequest.setFastestInterval(10);
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        LocationSettingsRequest.Builder builder = new
+                LocationSettingsRequest.Builder();
+        builder.addLocationRequest(mLocationRequest);
+
+        Task<LocationSettingsResponse> task = LocationServices.getSettingsClient(ctx).checkLocationSettings(builder.build());
+
+
+        task.addOnCompleteListener(task1 -> {
+            try {
+                LocationSettingsResponse response = task1.getResult(ApiException.class);
+                // All location settings are satisfied. The client can initialize location
+                // requests here.
+
+            } catch (ApiException exception) {
+                switch (exception.getStatusCode()) {
+                    case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
+                        // Location settings are not satisfied. But could be fixed by showing the
+                        // user a dialog.
+                        try {
+                            // Cast to a resolvable exception.
+                            ResolvableApiException resolvable = (ResolvableApiException) exception;
+                            // Show the dialog by calling startResolutionForResult(),
+                            // and check the result in onActivityResult().
+                            resolvable.startResolutionForResult(
+                                    (Activity) ctx,
+                                    101);
+                        } catch (IntentSender.SendIntentException e) {
+                            // Ignore the error.
+                        } catch (ClassCastException e) {
+                            // Ignore, should be an impossible error.
+                        }
+                        break;
+                    case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
+                        // Location settings are not satisfied. However, we have no way to fix the
+                        // settings so we won't show the dialog.
+                        break;
+                }
+            }
+        });
+
+/*
+        if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            buildAlertMessageNoGps();
+
+        }*/
     }
 }
 

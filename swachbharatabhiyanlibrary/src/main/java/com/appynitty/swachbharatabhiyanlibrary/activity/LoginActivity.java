@@ -9,12 +9,10 @@ import android.os.Build;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
 import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.PopupMenu;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -42,11 +40,11 @@ public class LoginActivity extends AppCompatActivity implements PopUpDialog.PopU
 
     public static final int PERMISSIONS_MULTIPLE_REQUEST = 123;
     private Context mContext = null;
-
+    String TAG = "LoginActivity";
     private AutoCompleteTextView EtEmpType;
     private EditText txtUserName = null;
     private EditText txtUserPwd = null;
-
+    String empType = "N";
     private Button btnLogin = null;
     private Button btnChangeLang = null;
 
@@ -146,12 +144,12 @@ public class LoginActivity extends AppCompatActivity implements PopUpDialog.PopU
         setContentView(R.layout.activity_login_layout);
 
 
-        EtEmpType = findViewById(R.id.et_emp_type);
+//        EtEmpType = findViewById(R.id.et_emp_type);
         /*EtEmpType.clearListSelection();
         EtEmpType.setText("");*/
 
 
-        EtEmpType.setOnClickListener(new View.OnClickListener() {     //Swapnil
+        /*EtEmpType.setOnClickListener(new View.OnClickListener() {     //Swapnil
             @Override
             public void onClick(View v) {
 
@@ -175,7 +173,7 @@ public class LoginActivity extends AppCompatActivity implements PopUpDialog.PopU
                 popup.show(); //showing popup menu
 
             }
-        });
+        });*/
 
 
         txtUserName = findViewById(R.id.txt_user_name);
@@ -242,7 +240,7 @@ public class LoginActivity extends AppCompatActivity implements PopUpDialog.PopU
                 Prefs.putString(AUtils.PREFS.USER_ID, mAdapter.getLoginDetailsPojo().getUserId());
                 Prefs.putString(AUtils.PREFS.USER_TYPE, mAdapter.getLoginDetailsPojo().getType());
                 Prefs.putString(AUtils.PREFS.USER_TYPE_ID, mAdapter.getLoginDetailsPojo().getTypeId());
-                Prefs.putString(AUtils.PREFS.EMPLOYEE_TYPE, mAdapter.getLoginDetailsPojo().getEmpType()); //added by swapnil
+                Prefs.putString(AUtils.PREFS.EMPLOYEE_TYPE, empType); //added by swapnil
                 Prefs.putBoolean(AUtils.PREFS.IS_GT_FEATURE, mAdapter.getLoginDetailsPojo().getGtFeatures());
                 Log.e("LoginActivity", "EmpType- " + Prefs.getString(AUtils.PREFS.EMPLOYEE_TYPE, null));
                 Prefs.putBoolean(AUtils.PREFS.IS_USER_LOGIN, true);
@@ -251,8 +249,8 @@ public class LoginActivity extends AppCompatActivity implements PopUpDialog.PopU
 
                 Intent intent;
                 String userType = mAdapter.getLoginDetailsPojo().getTypeId();
-                intent = new Intent(LoginActivity.this, AUtils.getDashboardClass(userType));
-
+                intent = new Intent(LoginActivity.this, DashboardActivity.class);
+                Log.e(TAG, "onSuccessCallBack: " + userType);
                 intent.putExtra(AUtils.isFromLogin, true);
                 startActivity(intent);
                 LoginActivity.this.finish();
@@ -300,10 +298,10 @@ public class LoginActivity extends AppCompatActivity implements PopUpDialog.PopU
     private boolean validateForm() {
 
 
-        if (EtEmpType.getText().toString().isEmpty()) {
+      /*  if (EtEmpType.getText().toString().isEmpty()) {
             AUtils.warning(mContext, mContext.getString(R.string.plz_slct_emp_type));
             return false;
-        }
+        }*/
 
         if (AUtils.isNullString(txtUserName.getText().toString())) {
             AUtils.warning(mContext, mContext.getString(R.string.plz_ent_username));
@@ -326,13 +324,14 @@ public class LoginActivity extends AppCompatActivity implements PopUpDialog.PopU
         loginPojo.setStatus("");
         loginPojo.setType("");
         loginPojo.setUserId("");*/
-        String empType = EtEmpType.getText().toString();
+//        String empType = "N";
         String userName = txtUserName.getText().toString().replaceAll("\\s", "");
         String password = txtUserPwd.getText().toString().replaceAll("\\s", "");
         loginPojo.setUserLoginId(userName);
         loginPojo.setUserPassword(password);
+        loginPojo.setEmployeeType(empType);
 
-        if (empType.matches(getResources().getString(R.string.household_collection))) {
+        /*if (empType.matches(getResources().getString(R.string.household_collection))) {
             loginPojo.setEmployeeType("N");
 
         } else if (empType.matches(getResources().getString(R.string.street_sweeping))) {
@@ -341,7 +340,7 @@ public class LoginActivity extends AppCompatActivity implements PopUpDialog.PopU
         } else if (empType.matches(getResources().getString(R.string.liquid_waste_cleaning))) {
             loginPojo.setEmployeeType("L");
 
-        }
+        }*/
 
 //        Log.d("TAG", "Employee Type: " + loginPojo.getEmployeeType());
         Log.d("TAG", "getFormData: " + loginPojo.getUserLoginId());
