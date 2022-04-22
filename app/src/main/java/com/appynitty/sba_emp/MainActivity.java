@@ -12,6 +12,7 @@ import com.appynitty.swachbharatabhiyanlibrary.activity.WelcomeActivity;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.LanguagePojo;
 import com.appynitty.swachbharatabhiyanlibrary.utils.AUtils;
 import com.pixplicity.easyprefs.library.Prefs;
+import com.riaylibrary.utils.CommonUtils;
 import com.riaylibrary.utils.LocaleHelper;
 
 import java.util.ArrayList;
@@ -23,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
 
     protected void attachBaseContext(Context base) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            super.attachBaseContext(LocaleHelper.onAttach(base, AUtils.LanguageConstants.MARATHI));
+            super.attachBaseContext(LocaleHelper.onAttach(base, AUtils.LanguageConstants.ENGLISH));
         } else {
             super.attachBaseContext(base);
         }
@@ -56,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
         eng.setLanguageId(AUtils.LanguageIDConstants.ENGLISH);
         languagePojos.add(eng);
 
-        LanguagePojo mar = new LanguagePojo();
+        /*LanguagePojo mar = new LanguagePojo();
         mar.setLanguageId(AUtils.LanguageIDConstants.MARATHI);
         mar.setLanguage(AUtils.LanguageNameConstants.MARATHI);
         languagePojos.add(mar);
@@ -64,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
         LanguagePojo hi = new LanguagePojo();
         hi.setLanguageId(AUtils.LanguageIDConstants.HINDI);
         hi.setLanguage(AUtils.LanguageNameConstants.HINDI);
-        languagePojos.add(hi);
+        languagePojos.add(hi);*/
 
         AUtils.setLanguagePojoList(languagePojos);
 

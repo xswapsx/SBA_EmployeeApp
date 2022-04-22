@@ -17,11 +17,13 @@
 
     <string name="about_appynitty">अँपीनीटी बद्दल</string>
     <string name="login_title">लॉग इन</string>
+    <string name="attendance_type_title">उपस्थिति प्रकार</string>
     <string name="login_txt">लॉग इन</string>
     <string name="user_name_txt">यूजरनेम</string>
     <string name="password_txt">पासवर्ड</string>
     <string name="forgot_password_txt">फॉरगेट पासवर्ड?</string>
     <string name="vehicle_no_txt">वाहन नंबर प्रविष्ट करा</string>
+    <string name="ulb_name_txt">यूएलबी नाव प्रविष्ट करा</string>
     <string name="submit_txt">सबमिट</string>
     <string name="dialog_title_txt_vehicle">घंटा गाडी प्रकार</string>
     <string name="lodin_success">लॉग इन पूर्ण झाले</string>

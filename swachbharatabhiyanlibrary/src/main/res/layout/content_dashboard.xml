@@ -108,6 +108,7 @@
 
                 <TextView
                     android:id="@+id/user_vehicle_type"
+                    android:visibility="gone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/duty_layout"
@@ -123,9 +124,34 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/menu_grid"
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/user_details_card"
         android:layout_marginTop="@dimen/dim_6_dp" />
+    <TextView
+        android:id="@+id/txt_msg_duty_on"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_centerHorizontal="true"
+        android:text="Shift Started Successfully"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:textSize="25sp"
+        android:visibility="gone"
+        android:textColor="@color/colorONDutyGreen"/>
+    <TextView
+        android:id="@+id/txt_msg_duty_off"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_centerHorizontal="true"
+        android:text="Shift Ended Successfully"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:textSize="25sp"
+        android:visibility="gone"
+        android:textColor="@color/colorOFFDutyRed"/>
 
 </RelativeLayout>

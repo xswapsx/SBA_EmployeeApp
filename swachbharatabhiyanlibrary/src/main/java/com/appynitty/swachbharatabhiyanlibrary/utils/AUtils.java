@@ -63,11 +63,12 @@ public class AUtils extends CommonUtils {
 //    public static final String SERVER_URL = "http://192.168.200.3:6560/";
 
     //  Advanced Ghanta Gadi Nagpur Live URL
-    public static final String SERVER_URL = "http://202.65.157.253:6561";
+    //public static final String SERVER_URL = "http://202.65.157.253:6561";
 
     //    Staging URL
 //    public static final String SERVER_URL = "http://115.115.153.117:4044/";
 //    public static final String SERVER_URL = "http://202.65.157.254:6560";
+        public static final String SERVER_URL = "http://183.177.126.33:6560";
 
     //Relese URL
 //    public static final String SERVER_URL = "https://ghantagadi.in:444/";
@@ -93,6 +94,7 @@ public class AUtils extends CommonUtils {
     public static final String DIALOG_TYPE_LANGUAGE = "Dialog_Type_Language";
 
     public static final String DEFAULT_LANGUAGE_ID = LanguageConstants.ENGLISH;
+    public static final String DEFAULT_VEHICLE_TYPE = "1";
 
     public static final int SPLASH_SCREEN_TIME = 3000;
 
@@ -565,7 +567,7 @@ public class AUtils extends CommonUtils {
             eng.setLanguageId(AUtils.LanguageIDConstants.ENGLISH);
             languagePojoList.add(eng);
 
-            LanguagePojo mar = new LanguagePojo();
+            /*LanguagePojo mar = new LanguagePojo();
             mar.setLanguageId(AUtils.LanguageIDConstants.MARATHI);
             mar.setLanguage(AUtils.LanguageNameConstants.MARATHI);
             languagePojoList.add(mar);
@@ -573,7 +575,7 @@ public class AUtils extends CommonUtils {
             LanguagePojo hi = new LanguagePojo();
             hi.setLanguageId(AUtils.LanguageIDConstants.HINDI);
             hi.setLanguage(AUtils.LanguageNameConstants.HINDI);
-            languagePojoList.add(hi);
+            languagePojoList.add(hi);*/
 
         }
 

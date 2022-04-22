@@ -9,7 +9,7 @@
     <TextView
         android:id="@+id/lbl_title"
         style="@style/MyTitle"
-        android:text="@string/login_title"
+        android:text="@string/attendance_type_title"
         android:textSize="@dimen/dim_20_sp"
         android:layout_margin="5dp"
         android:paddingLeft="10dp"
@@ -48,7 +48,7 @@
             <EditText
                 android:id="@+id/txt_vehicle_no"
                 style="@style/MyEditTextStyleLight"
-                android:hint="@string/vehicle_no_txt"
+                android:hint="@string/ulb_name_txt"
                 android:maxLines="1"
                 android:maxLength="12"
                 android:digits="@string/vehicle_no_validation"/>

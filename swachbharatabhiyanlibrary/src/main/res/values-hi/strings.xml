@@ -52,6 +52,7 @@
     <string name="lodin_success">सफलतापूर्ण प्रवेश!</string>
     <string name="login_error">लॉग इन करने में असमर्थ रहा। बाद में पुन: प्रयास करें!</string>
     <string name="login_title">लॉग इन</string>
+    <string name="attendance_type_title">उपस्थिति प्रकार</string>
     <string name="login_txt">लॉग इन</string>
     <string name="logout_confirmation_msg">क्या आप लॉग आउट करना चाहते हैं?</string>
     <string name="logout_confirmation_title">लॉगआउट पुष्टिकरण</string>
@@ -121,6 +122,7 @@
     <string name="try_after_sometime">कृपया कुछ देर बाद प्रयास करें!</string>
     <string name="user_name_txt">उपयोगकर्ता नाम</string>
     <string name="vehicle_no_txt">वाहन क्रमांक दर्ज करें</string>
+    <string name="ulb_name_txt">यूएलबी नाम दर्ज करें</string>
     <string name="vehicle_number_txt">वाहन संख्या:</string>
     <string name="ward_no">वार्ड क्र</string>
     <string name="yes_txt">हाँ</string>

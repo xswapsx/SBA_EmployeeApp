@@ -2,6 +2,7 @@ package com.appynitty.swachbharatabhiyanlibrary.activity;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -12,7 +13,10 @@ import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.provider.MediaStore;
+
+import android.media.MediaPlayer;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.Menu;
@@ -29,22 +33,31 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.appynitty.retrofitconnectionlibrary.connection.Connection;
 import com.appynitty.swachbharatabhiyanlibrary.R;
+import com.appynitty.swachbharatabhiyanlibrary.adapters.UI.DashboardMenuAdapter;
 import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.AttendanceAdapterClass;
 import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.CheckAttendanceAdapterClass;
+import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.EmpAttendanceAdapterClass;
+import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.EmpCheckAttendanceAdapterClass;
+import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.EmpSyncServerAdapterClass;
+import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.EmpUserDetailAdapterClass;
 import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.OfflineAttendanceAdapterClass;
+import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.ShareLocationAdapterClass;
 import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.SyncOfflineAdapterClass;
 import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.UserDetailAdapterClass;
 import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.VehicleTypeAdapterClass;
 import com.appynitty.swachbharatabhiyanlibrary.adapters.connection.VerifyDataAdapterClass;
+import com.appynitty.swachbharatabhiyanlibrary.dialogs.EmpPopUpDialog;
 import com.appynitty.swachbharatabhiyanlibrary.dialogs.IdCardDialog;
 import com.appynitty.swachbharatabhiyanlibrary.dialogs.PopUpDialog;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.AttendancePojo;
+import com.appynitty.swachbharatabhiyanlibrary.pojos.EmpInPunchPojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.LanguagePojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.LoginPojo;
 import com.appynitty.swachbharatabhiyanlibrary.pojos.MenuListPojo;
@@ -64,6 +77,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.pixplicity.easyprefs.library.Prefs;
 import com.riaylibrary.custom_component.GlideCircleTransformation;
+import com.riaylibrary.utils.CommonUtils;
 import com.riaylibrary.utils.LocaleHelper;
 
 import org.json.JSONException;
@@ -104,7 +118,7 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
     private TextView userName;
     private TextView empId, txtEmpId;
     public boolean isSync = true;
-    FrameLayout pb;
+
     private AttendancePojo attendancePojo = null;
 
     private List<VehicleTypePojo> vehicleTypePojoList;
@@ -116,6 +130,7 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
 
     private boolean isFromLogin;
     private LoginPojo loginPojo;
+    private TextView txtDutyOn,txtDutyOff;
 
     private CheckAttendanceAdapterClass mCheckAttendanceAdapter;
     private AttendanceAdapterClass mAttendanceAdapter;
@@ -134,7 +149,7 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
 
     //    private WorkManager workManager;
     MediaPlayer mp = null;
-
+    FrameLayout pb;
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -345,7 +360,8 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
             switch (resultCode) {
                 case Activity.RESULT_OK:
                     // All required changes were successfully made
-//                    Toast.makeText(DashboardActivity.this, "Turning on the GPS..." + "", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(DashboardActivity.this, "Turning on the GPS\nPlease wait..." + "", Toast.LENGTH_SHORT).show();
+
                     pb.setVisibility(View.VISIBLE);
                     new Handler().postDelayed(new Runnable() {
                         @Override
@@ -353,6 +369,7 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
                             pb.setVisibility(View.GONE);
                         }
                     }, 5000);
+
                     break;
                 case Activity.RESULT_CANCELED:
                     // The user was asked to change settings, but chose not to
@@ -578,6 +595,10 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
         toolbar = findViewById(R.id.toolbar);
         attendanceStatus = findViewById(R.id.user_attendance_status);
         vehicleStatus = findViewById(R.id.user_vehicle_type);
+        txtDutyOn = findViewById(R.id.txt_msg_duty_on);
+        txtDutyOn.setVisibility(View.GONE);
+        txtDutyOff = findViewById(R.id.txt_msg_duty_off);
+        txtDutyOff.setVisibility(View.GONE);
         markAttendance = findViewById(R.id.user_attendance_toggle);
         userName = findViewById(R.id.user_full_name);
         empId = findViewById(R.id.user_emp_id);
@@ -603,7 +624,7 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
                 if (isAttendanceOff) {
                     isFromAttendanceChecked = true;
                     onOutPunchSuccess();
-                    if (Prefs.getString(AUtils.LANGUAGE_NAME, AUtils.DEFAULT_LANGUAGE_ID).equals(AUtils.LanguageConstants.MARATHI)) {
+                    if (Prefs.getString(AUtils.LANGUAGE_NAME, AUtils.DEFAULT_LANGUAGE_ID).equals(AUtils.LanguageIDConstants.ENGLISH)) {
                         AUtils.info(mContext, messageMar, Toast.LENGTH_LONG);
                     } else {
                         AUtils.info(mContext, message, Toast.LENGTH_LONG);
@@ -623,6 +644,7 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
                 AUtils.error(mContext, getResources().getString(R.string.serverError), Toast.LENGTH_LONG);
             }
         });
+
 
         mAttendanceAdapter.setAttendanceListener(new AttendanceAdapterClass.AttendanceListener() {
             @Override
@@ -680,7 +702,7 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
                 if (AUtils.isInternetAvailable(AUtils.mainApplicationConstant)) {
                     onSwitchStatus(isChecked);
                 } else {
-                    Toast.makeText(mContext, getResources().getString(R.string.no_internet_error), Toast.LENGTH_SHORT).show();
+                    /*Toast.makeText(mContext, getResources().getString(R.string.no_internet_error), Toast.LENGTH_SHORT).show();*/
                     markAttendance.setChecked(AUtils.isIsOnduty());
                 }
 
@@ -690,9 +712,7 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
         mUserDetailAdapter.setUserDetailListener(new UserDetailAdapterClass.UserDetailListener() {
             @Override
             public void onSuccessCallBack() {
-
                 initUserDetails();
-
             }
 
             @Override
@@ -779,15 +799,15 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
         menuPojoList.add(new MenuListPojo(getResources().getString(R.string.title_activity_qrcode_scanner), R.drawable.ic_qr_code, QRcodeScannerActivity.class, true));
         menuPojoList.add(new MenuListPojo(getResources().getString(R.string.title_activity_take_photo), R.drawable.ic_photograph, TakePhotoActivity.class, true));
 
-        menuPojoList.add(new MenuListPojo(getResources().getString(R.string.title_activity_broadcast_page), R.drawable.ic_broadcast_icon, BroadcastActivity.class, true));
+//        menuPojoList.add(new MenuListPojo(getResources().getString(R.string.title_activity_broadcast_page), R.drawable.ic_broadcast_icon, BroadcastActivity.class, true));
         menuPojoList.add(new MenuListPojo(getResources().getString(R.string.title_activity_history_page), R.drawable.ic_history, HistoryPageActivity.class, false));
 
         menuPojoList.add(new MenuListPojo(getResources().getString(R.string.title_activity_profile_page), R.drawable.ic_id_card, ProfilePageActivity.class, false));
         menuPojoList.add(new MenuListPojo(getResources().getString(R.string.title_activity_sync_offline), R.drawable.ic_sync, SyncOfflineActivity.class, false));
 
-        /*DashboardMenuAdapter mainMenuAdaptor = new DashboardMenuAdapter(mContext);
+        DashboardMenuAdapter mainMenuAdaptor = new DashboardMenuAdapter(mContext);
         mainMenuAdaptor.setMenuList(menuPojoList);
-        menuGridView.setAdapter(mainMenuAdaptor);*/
+        menuGridView.setAdapter(mainMenuAdaptor);
 
         Type type = new TypeToken<AttendancePojo>() {
         }.getType();
@@ -806,7 +826,8 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
                     if (AUtils.isInternetAvailable())
                         verifyOfflineData(LoginActivity.class, true);
                     else
-                        AUtils.warning(mContext, getResources().getString(R.string.no_internet_error));
+                        Log.d(TAG, "onClick: no internet!");
+                    /* AUtils.warning(mContext, getResources().getString(R.string.no_internet_error));*/
                 } else {
                     AUtils.info(mContext, getResources().getString(R.string.off_duty_warning));
                 }
@@ -879,7 +900,6 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
             playsound();
             onSwitchOff();
 
-
         }
 
     }
@@ -918,7 +938,7 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
         attendanceStatus.setText(this.getResources().getString(R.string.status_on_duty));
         attendanceStatus.setTextColor(this.getResources().getColor(R.color.colorONDutyGreen));
 
-        /*String vehicleType = null;
+        String vehicleType = null;
 
         for (int i = 0; i < vehicleTypePojoList.size(); i++) {
             if (Prefs.getString(AUtils.VEHICLE_ID, "0").equals(vehicleTypePojoList.get(i).getVtId())) {
@@ -937,11 +957,14 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
         } else {
             vehicleStatus.setText(String.format("%s%s%s", this.getResources().getString(R.string.opening_round_bracket),
                     vehicleType, this.getResources().getString(R.string.closing_round_bracket)));
-        }*/
+        }
 
         AUtils.setInPunchDate(Calendar.getInstance());
         Log.i(TAG, AUtils.getInPunchDate());
         AUtils.setIsOnduty(true);
+        AUtils.success(mContext, "Shift started successfully");
+       /* txtDutyOn.setVisibility(View.GONE);
+        txtDutyOff.setVisibility(View.VISIBLE);*/
     }
 
     private void onOutPunchSuccess() {
@@ -949,16 +972,22 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
         attendanceStatus.setTextColor(this.getResources().getColor(R.color.colorOFFDutyRed));
 
         vehicleStatus.setText("");
-        markAttendance.setChecked(false);
+
         stopServiceIfRunning();
+
+        markAttendance.setChecked(false);
+
         attendancePojo = null;
         AUtils.removeInPunchDate();
         AUtils.setIsOnduty(false);
+        AUtils.error(mContext, "Shift ended successfully");
+       /* txtDutyOn.setVisibility(View.GONE);
+        txtDutyOff.setVisibility(View.VISIBLE);*/
     }
 
     private void stopServiceIfRunning() {
         boolean isservicerunning = AUtils.isMyServiceRunning(AUtils.mainApplicationConstant, LocationService.class);
-        //swap service
+
         if (isservicerunning)
             ((MyApplication) AUtils.mainApplicationConstant).stopLocationTracking();
     }
@@ -1017,14 +1046,14 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
 
             String vehicleName = "";
 
-            /*if (AUtils.isNull(vehicleTypePojoList)) {
+            if (AUtils.isNull(vehicleTypePojoList)) {
                 vehicleTypePojoList = mVehicleTypeAdapter.getVehicleTypePojoList();
             }
             for (int i = 0; i < vehicleTypePojoList.size(); i++) {
 
                 if (Prefs.getString(AUtils.VEHICLE_ID, "").equals(vehicleTypePojoList.get(i).getVtId())) {
-                    if (Prefs.getString(AUtils.LANGUAGE_NAME, AUtils.DEFAULT_LANGUAGE_ID).equals(AUtils.LanguageConstants.MARATHI))
-                        vehicleName = vehicleTypePojoList.get(i).getDescription();
+                    if (Prefs.getString(AUtils.LANGUAGE_NAME, AUtils.DEFAULT_LANGUAGE_ID).equals(AUtils.LanguageConstants.ENGLISH))
+                        vehicleName = vehicleTypePojoList.get(i).getDescriptionMar();
                     else
                         vehicleName = vehicleTypePojoList.get(i).getDescription();
                 }
@@ -1035,7 +1064,7 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
                 vehicleStatus.setText(String.format("%s%s %s %s%s", this.getResources().getString(R.string.opening_round_bracket), vehicleName, this.getResources().getString(R.string.hyphen), Prefs.getString(AUtils.VEHICLE_NO, ""), this.getResources().getString(R.string.closing_round_bracket)));
             } else {
                 vehicleStatus.setText(String.format("%s%s%s", this.getResources().getString(R.string.opening_round_bracket), vehicleName, this.getResources().getString(R.string.closing_round_bracket)));
-            }*/
+            }
         } else {
             markAttendance.setChecked(false);
         }
@@ -1078,7 +1107,7 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
                 if (!AUtils.DutyOffFromService) {
                     HashMap<Integer, Object> mLanguage = new HashMap<>();
 
-                    /*vehicleTypePojoList = mVehicleTypeAdapter.getVehicleTypePojoList();
+                    vehicleTypePojoList = mVehicleTypeAdapter.getVehicleTypePojoList();
 
                     if (!AUtils.isNull(vehicleTypePojoList) && !vehicleTypePojoList.isEmpty()) {
                         for (int i = 0; i < vehicleTypePojoList.size(); i++) {
@@ -1095,29 +1124,13 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
                         mVehicleTypeAdapter.getVehicleType();
                         markAttendance.setChecked(false);
                         AUtils.error(mContext, mContext.getString(R.string.vehicle_not_found_error), Toast.LENGTH_SHORT);
-                    }*/
-                    if (AUtils.isNull(attendancePojo)) {
-                        attendancePojo = new AttendancePojo();
-                    }
-
-                    try {
-                        syncOfflineAttendanceRepository.insertCollection(attendancePojo, SyncOfflineAttendanceRepository.InAttendanceId);
-                        onInPunchSuccess();
-                        if (AUtils.isInternetAvailable()) {
-                            if (!syncOfflineAttendanceRepository.checkIsInAttendanceSync())
-                                mOfflineAttendanceAdapter.SyncOfflineData();
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        markAttendance.setChecked(false);
-                        AUtils.error(mContext, mContext.getString(R.string.something_error), Toast.LENGTH_SHORT);
                     }
                 } else {
                     AUtils.DutyOffFromService = false;
                 }
             } else {
                 markAttendance.setChecked(false);
-                Toast.makeText(mContext, getResources().getString(R.string.gps_off_message), Toast.LENGTH_LONG).show();
+//                Toast.makeText(mContext, getResources().getString(R.string.no_internet_error), Toast.LENGTH_LONG).show();
 //                AUtils.showGPSSettingsAlert(mContext);
             }
         } else {
@@ -1199,57 +1212,4 @@ public class DashboardActivity extends AppCompatActivity implements PopUpDialog.
         super.onDestroy();
     }
 
-    /*public void statusCheck() {
-
-        LocationRequest mLocationRequest = new LocationRequest();
-        mLocationRequest.setInterval(10);
-        mLocationRequest.setSmallestDisplacement(10);
-        mLocationRequest.setFastestInterval(10);
-        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        LocationSettingsRequest.Builder builder = new
-                LocationSettingsRequest.Builder();
-        builder.addLocationRequest(mLocationRequest);
-
-        Task<LocationSettingsResponse> task = LocationServices.getSettingsClient(this).checkLocationSettings(builder.build());
-
-
-        task.addOnCompleteListener(task1 -> {
-            try {
-                LocationSettingsResponse response = task1.getResult(ApiException.class);
-                // All location settings are satisfied. The client can initialize location
-                // requests here.
-
-            } catch (ApiException exception) {
-                switch (exception.getStatusCode()) {
-                    case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
-                        // Location settings are not satisfied. But could be fixed by showing the
-                        // user a dialog.
-                        try {
-                            // Cast to a resolvable exception.
-                            ResolvableApiException resolvable = (ResolvableApiException) exception;
-                            // Show the dialog by calling startResolutionForResult(),
-                            // and check the result in onActivityResult().
-                            resolvable.startResolutionForResult(
-                                    DashboardActivity.this,
-                                    101);
-                        } catch (IntentSender.SendIntentException e) {
-                            // Ignore the error.
-                        } catch (ClassCastException e) {
-                            // Ignore, should be an impossible error.
-                        }
-                        break;
-                    case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
-                        // Location settings are not satisfied. However, we have no way to fix the
-                        // settings so we won't show the dialog.
-                        break;
-                }
-            }
-        });
-
-*//*
-        if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            buildAlertMessageNoGps();
-
-        }*//*
-    }*/
 }

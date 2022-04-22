@@ -88,7 +88,7 @@ public class PopUpDialog extends Dialog {
     private void initData() {
         if(mType.equals(AUtils.DIALOG_TYPE_VEHICLE))
         {
-            lblTitle.setText(mContext.getResources().getString(R.string.dialog_title_txt_vehicle));
+            lblTitle.setText(mContext.getResources().getString(R.string.attendance_type_title));
         }
         else
         {
